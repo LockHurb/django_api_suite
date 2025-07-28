@@ -46,20 +46,22 @@ class DemoRestApiItem(APIView):
                 return item
         return None
     
-    def put(self, request, item_id=None):
-        """PUT: Reemplazar completamente los datos de un elemento (excepto el ID)"""
-        data = request.data
-        
-        # Obtener ID de la URL o del cuerpo
-        if item_id is None:
-            if 'id' not in data:
-                return Response({'error': 'El campo "id" es obligatorio cuando no se proporciona en la URL.'}, status=status.HTTP_400_BAD_REQUEST)
-            item_id = data['id']
-        
-        # Buscar el elemento por ID
+    def get(self, request, item_id):
+        """GET: Obtener un elemento específico por ID"""
         item = self._find_item_by_id(item_id)
         if not item:
             return Response({'error': 'Elemento no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        return Response(item, status=status.HTTP_200_OK)
+    
+    def put(self, request, item_id):
+        """PUT: Reemplazar completamente los datos de un elemento (excepto el ID)"""
+        # Buscar el elemento por ID de la URL
+        item = self._find_item_by_id(item_id)
+        if not item:
+            return Response({'error': 'Elemento no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        data = request.data
         
         # Validación: campos requeridos
         if 'name' not in data or 'email' not in data:
@@ -77,17 +79,9 @@ class DemoRestApiItem(APIView):
             
         return Response({'message': 'Elemento reemplazado exitosamente.', 'data': item}, status=status.HTTP_200_OK)
     
-    def patch(self, request, item_id=None):
+    def patch(self, request, item_id):
         """PATCH: Actualizar parcialmente los campos del elemento"""
-        data = request.data
-        
-        # Obtener ID de la URL o del cuerpo
-        if item_id is None:
-            if 'id' not in data:
-                return Response({'error': 'El campo "id" es obligatorio cuando no se proporciona en la URL.'}, status=status.HTTP_400_BAD_REQUEST)
-            item_id = data['id']
-        
-        # Buscar el elemento por ID
+        # Buscar el elemento por ID de la URL
         item = self._find_item_by_id(item_id)
         if not item:
             return Response({'error': 'Elemento no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
@@ -110,17 +104,9 @@ class DemoRestApiItem(APIView):
             'data': item
         }, status=status.HTTP_200_OK)
     
-    def delete(self, request, item_id=None):
+    def delete(self, request, item_id):
         """DELETE: Eliminar lógicamente un elemento (marcar como inactivo)"""
-        data = request.data
-        
-        # Obtener ID de la URL o del cuerpo
-        if item_id is None:
-            if 'id' not in data:
-                return Response({'error': 'El campo "id" es obligatorio cuando no se proporciona en la URL.'}, status=status.HTTP_400_BAD_REQUEST)
-            item_id = data['id']
-        
-        # Buscar el elemento por ID
+        # Buscar el elemento por ID de la URL
         item = self._find_item_by_id(item_id)
         if not item:
             return Response({'error': 'Elemento no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
