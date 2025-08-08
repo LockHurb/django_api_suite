@@ -19,8 +19,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.shortcuts import redirect
+
+def redirect_to_landing(request):
+    return redirect('/landing/api/index/')
 
 urlpatterns = [
+    path("", redirect_to_landing, name="home"),
     path("admin/", admin.site.urls),
     path("homepage/", include("homepage.urls")),
     path("demo/rest/api/", include("demo_rest_api.urls")),
