@@ -21,7 +21,7 @@ class DemoRestApi(APIView):
     def get(self, request):
 
       # Filtra la lista para incluir solo los elementos donde 'is_active' es True
-      active_items = [item for item in data_list if item.get('is_active', False)]
+      active_items = [item for item in data_list if item.get('is_active', True)]
       return Response(active_items, status=status.HTTP_200_OK)
     
     def post(self, request):
@@ -45,8 +45,8 @@ class DebugView(APIView):
         return Response({
             'total_items': len(data_list),
             'all_items': data_list,
-            'active_items': [item for item in data_list if item.get('is_active', False)],
-            'inactive_items': [item for item in data_list if not item.get('is_active', False)]
+            'active_items': [item for item in data_list if item.get('is_active', True)],
+            'inactive_items': [item for item in data_list if not item.get('is_active', True)]
         }, status=status.HTTP_200_OK)
 
 
