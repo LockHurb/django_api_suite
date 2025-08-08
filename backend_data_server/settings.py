@@ -135,10 +135,17 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Coloque la ruta relativa al archivo con la clave privada
-FIREBASE_CREDENTIALS_PATH = credentials.Certificate("secrets/landing-key.json")
-
-# Inicialice la conexión con el Realtime Database con la clave privada y la URL de referencia
-firebase_admin.initialize_app(FIREBASE_CREDENTIALS_PATH, {
-   'databaseURL': 'https://landingpage-7f0ce-default-rtdb.firebaseio.com/'
-})
+# Configuración de Firebase (opcional para desarrollo)
+try:
+    # Coloque la ruta relativa al archivo con la clave privada
+    FIREBASE_CREDENTIALS_PATH = credentials.Certificate("secrets/landing-key.json")
+    
+    # Inicialice la conexión con el Realtime Database con la clave privada y la URL de referencia
+    firebase_admin.initialize_app(FIREBASE_CREDENTIALS_PATH, {
+       'databaseURL': 'https://landingpage-7f0ce-default-rtdb.firebaseio.com/'
+    })
+    print("Firebase inicializado correctamente")
+except FileNotFoundError:
+    print("Archivo de credenciales de Firebase no encontrado. El proyecto funcionará sin Firebase.")
+except Exception as e:
+    print(f"Error al inicializar Firebase: {e}")
